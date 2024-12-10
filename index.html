@@ -18,7 +18,6 @@
             color: #fff;
             padding: 15px 0;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         h1 {
             margin: 0;
@@ -55,6 +54,7 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #00375f;
@@ -62,6 +62,7 @@
         #workers {
             list-style: none;
             padding: 0;
+            margin-top: 20px;
         }
         #workers li {
             padding: 10px;
@@ -73,71 +74,35 @@
         #workers li:last-child {
             border-bottom: none;
         }
-        #welcome-message {
-            background-color: #ffc107;
-            color: #000;
-            padding: 10px;
-            margin: 20px 0;
-            text-align: center;
-            font-weight: bold;
-            overflow: hidden;
-            white-space: nowrap;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .admin-button {
-            width: 20px;
-            height: 20px;
-            background-color: transparent;
-            border: none;
-            font-size: 0.8em;
-            cursor: pointer;
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            color: #004d80;
-        }
         .call-button {
             background-color: #28a745;
             color: white;
             border: none;
-            padding: 5px 10px;
+            padding: 5px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
+            font-size: 0.9em;
         }
         .call-button:hover {
             background-color: #218838;
+        }
+        .worker-details {
+            flex-direction: column;
+            align-items: start;
+            gap: 5px;
+        }
+        .highlight {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Sonitpur District Nirman Mazdoor Sangh</h1>
-        <button class="admin-button" onclick="toggleLogin()">🔑</button>
     </header>
-    <div id="welcome-message">
-        <marquee>Welcome to the official portal of Sonitpur District Nirman Mazdoor Sangh. Connecting skilled workers with opportunities.</marquee>
-    </div>
     <main>
-        <section id="worker-search">
-            <h2>Search Workers</h2>
-            <label for="search-work">Select Work Type:</label>
-            <select id="search-work" oninput="filterWorkers()">
-                <option value="">All</option>
-                <option value="mason">Mason</option>
-                <option value="carpenter">Carpenter</option>
-                <option value="painter">Painter</option>
-                <option value="plumber">Plumber</option>
-                <option value="electrician">Electrician</option>
-                <option value="tiler">Tiler</option>
-            </select>
-            <label for="search-pincode">Enter Pin Code:</label>
-            <input type="text" id="search-pincode" placeholder="Enter Pin Code..." oninput="filterWorkers()">
-            <button id="search-button" onclick="filterWorkers()">Search</button>
-            <ul id="workers"></ul>
-        </section>
-
-        <section id="worker-form">
+        <section id="worker-registration">
             <h2>Worker Registration</h2>
             <form id="registrationForm">
                 <label for="name">Name:</label>
@@ -156,32 +121,40 @@
                     <option value="plumber">Plumber</option>
                     <option value="electrician">Electrician</option>
                     <option value="tiler">Tiler</option>
+                    <option value="welder">Welder</option>
+                    <option value="plasterer">Plasterer</option>
+                    <option value="gardener">Gardener</option>
+                    <option value="cook">Cook</option>
                 </select>
-                <button type="submit">Submit</button>
+                <button type="submit">Register Worker</button>
             </form>
         </section>
 
-        <section id="login-section" class="hidden">
-            <h2>Admin Login</h2>
-            <form id="loginForm">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <button type="submit">Login</button>
-            </form>
-            <p id="login-message">If you need the admin password, please contact <a href="https://thedigitsync.blogspot.com" target="_blank">here</a>.</p>
-        </section>
-
-        <section id="admin-panel" class="hidden">
-            <h2>Admin Panel</h2>
-            <p>Manage registered workers here.</p>
-            <ul id="admin-workers"></ul>
-            <button onclick="downloadExcel()">Download Excel</button>
+        <section id="worker-search">
+            <h2>Search Workers</h2>
+            <input type="text" id="search-name" placeholder="Search by name...">
+            <select id="search-work">
+                <option value="">All</option>
+                <option value="mason">Mason</option>
+                <option value="carpenter">Carpenter</option>
+                <option value="painter">Painter</option>
+                <option value="plumber">Plumber</option>
+                <option value="electrician">Electrician</option>
+                <option value="tiler">Tiler</option>
+                <option value="welder">Welder</option>
+                <option value="plasterer">Plasterer</option>
+                <option value="gardener">Gardener</option>
+                <option value="cook">Cook</option>
+            </select>
+            <input type="text" id="search-pincode" placeholder="Search by pin code...">
+            <button onclick="filterWorkers()">Search</button>
+            <ul id="workers"></ul>
         </section>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB-JxVp3xfNPpJf5P5tNUgE3klG8e5sPbE",
@@ -196,6 +169,7 @@
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+        let workers = [];
 
         document.getElementById('registrationForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -215,49 +189,51 @@
             });
 
             this.reset();
-            loadWorkers();
+            alert('Worker registered successfully!');
+            loadWorkers(); // Refresh the worker list after registration
         });
 
         function loadWorkers() {
             const workerListRef = ref(database, 'workers');
             onValue(workerListRef, (snapshot) => {
                 const data = snapshot.val();
-                const workerList = document.getElementById('workers');
-                const adminWorkerList = document.getElementById('admin-workers');
-                workerList.innerHTML = '';
-                adminWorkerList.innerHTML = '';
-
+                workers = [];
                 for (const id in data) {
-                    const worker = data[id];
-                    const workerItem = document.createElement('li');
-                    const adminWorkerItem = document.createElement('li');
-
-                    workerItem.innerHTML = `
-                        ${worker.name} - ${worker.address}, Pin: ${worker.pincode}
-                        <button class="call-button" onclick="callWorker('${worker.phone}')">Call</button>
-                    `;
-                    adminWorkerItem.innerHTML = `
-                        ${worker.name} - ${worker.address}, Pin: ${worker.pincode} - ${worker.phone} - ${worker.work}
-                        <div class="action-buttons">
-                            <button onclick="editWorker('${id}')">Edit</button>
-                            <button onclick="deleteWorker('${id}')">Delete</button>
-                        </div>
-                    `;
-
-                    workerList.appendChild(workerItem);
-                    adminWorkerList.appendChild(adminWorkerItem);
+                    workers.push(data[id]);
                 }
+                displayWorkers(workers);
             });
         }
 
         function filterWorkers() {
+            const name = document.getElementById('search-name').value.toLowerCase();
             const workType = document.getElementById('search-work').value.toLowerCase();
-            const pinCode = document.getElementById('search-pincode').value;
-            document.querySelectorAll('#workers li').forEach(worker => {
-                const text = worker.textContent.toLowerCase();
-                const matchesWork = !workType || text.includes(workType);
-                const matchesPin = !pinCode || text.includes(pinCode);
-                worker.style.display = matchesWork && matchesPin ? '' : 'none';
+            const pinCode = document.getElementById('search-pincode').value.trim();
+
+            const filteredWorkers = workers.filter(worker => {
+                const matchesName = !name || worker.name.toLowerCase().includes(name);
+                const matchesWork = !workType || worker.work.toLowerCase() === workType;
+                const matchesPin = !pinCode || worker.pincode.includes(pinCode);
+                return matchesName && matchesWork && matchesPin;
+            });
+
+            displayWorkers(filteredWorkers);
+        }
+
+        function displayWorkers(workerList) {
+            const workerListElement = document.getElementById('workers');
+            workerListElement.innerHTML = '';
+
+            workerList.forEach(worker => {
+                const workerItem = document.createElement('li');
+                workerItem.className = 'worker-details';
+                workerItem.innerHTML = `
+                    <div class="highlight">${worker.name}</div>
+                    <div>${worker.address}, Pin: ${worker.pincode}</div>
+                    <div>Phone: ${worker.phone}</div>
+                    <button class="call-button" onclick="callWorker('${worker.phone}')">Call</button>
+                `;
+                workerListElement.appendChild(workerItem);
             });
         }
 
@@ -265,44 +241,7 @@
             window.open(`tel:${phone}`);
         }
 
-        function editWorker(id) {
-            alert('Edit functionality is not yet implemented!');
-            // Implement edit functionality logic here
-        }
-
-        function deleteWorker(id) {
-            const workerRef = ref(database, 'workers/' + id);
-            remove(workerRef).then(() => {
-                alert('Worker deleted successfully!');
-                loadWorkers();
-            }).catch(error => {
-                console.error('Error deleting worker:', error);
-            });
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const password = document.getElementById('password').value;
-            if (password === 'admin') {
-                alert('Logged in successfully!');
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('admin-panel').classList.remove('hidden');
-            } else {
-                alert('Incorrect password. Please try again.');
-            }
-        });
-
-        function toggleLogin() {
-            const loginSection = document.getElementById('login-section');
-            loginSection.classList.toggle('hidden');
-        }
-
-        function downloadExcel() {
-            alert('Download Excel functionality is not yet implemented!');
-            // Implement Excel download functionality logic here
-        }
-
-        window.onload = loadWorkers;
+        loadWorkers();
     </script>
 </body>
 </html>
