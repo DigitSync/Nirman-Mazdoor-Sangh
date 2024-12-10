@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonitpur District Nirman Mazdur Sangha</title>
+    <title>Sonitpur District Nirman Mazdoor Sangh</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -28,7 +29,7 @@
             max-width: 900px;
             margin: 0 auto;
         }
-        form, #worker-list, #login-section {
+        section {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
@@ -58,11 +59,6 @@
         button:hover {
             background-color: #00375f;
         }
-        #search {
-            margin-bottom: 20px;
-            border-radius: 5px;
-            padding: 10px;
-        }
         #workers {
             list-style: none;
             padding: 0;
@@ -77,13 +73,6 @@
         #workers li:last-child {
             border-bottom: none;
         }
-        #login-section {
-            display: none;
-        }
-        #login-message {
-            text-align: center;
-            margin-top: 20px;
-        }
         .hidden {
             display: none;
         }
@@ -91,18 +80,24 @@
             display: flex;
             gap: 5px;
         }
+        #description {
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Sonitpur District Nirman Mazdur Sangha</h1>
+        <h1>Sonitpur District Nirman Mazdoor Sangh</h1>
     </header>
     <main>
-        <button onclick="toggleLogin()">Admin Login</button>
-
-        <section id="worker-list">
-            <h2>Available Workers</h2>
-            <label for="search-work">Search by Work Type:</label>
+        <section id="description">
+            <p>Welcome to the Sonitpur District Nirman Mazdoor Sangh official portal. This platform helps connect skilled workers with contractors and businesses in need of services. Here, workers can register their details, and employers can search for workers by type and location.</p>
+        </section>
+        
+        <section id="worker-search">
+            <h2>Search Workers</h2>
+            <label for="search-work">Select Work Type:</label>
             <select id="search-work" oninput="filterWorkers()">
                 <option value="">All</option>
                 <option value="mason">Mason</option>
@@ -112,9 +107,10 @@
                 <option value="electrician">Electrician</option>
                 <option value="tiler">Tiler</option>
             </select>
-            <label for="search-pincode">Search by Pin Code:</label>
+            <label for="search-pincode">Enter Pin Code:</label>
             <input type="text" id="search-pincode" placeholder="Enter Pin Code..." oninput="filterWorkers()">
             <ul id="workers"></ul>
+            <button onclick="downloadExcel()">Download Excel</button>
         </section>
 
         <section id="worker-form" class="hidden">
@@ -141,6 +137,8 @@
             </form>
         </section>
 
+        <button onclick="toggleLogin()">Admin Login</button>
+        
         <section id="login-section" class="hidden">
             <h2>Admin Login</h2>
             <form id="loginForm">
@@ -202,7 +200,7 @@
                     const workerItem = document.createElement('li');
                     workerItem.innerHTML = `
                         ${worker.name} - ${worker.address}, Pin: ${worker.pincode} - ${worker.phone} - ${worker.work}
-                        <div class="action-buttons">
+                        <div class="action-buttons hidden" id="admin-${id}">
                             <button onclick="editWorker('${id}')">Edit</button>
                             <button onclick="deleteWorker('${id}')">Delete</button>
                         </div>
@@ -245,6 +243,7 @@
                 alert('Logged in successfully!');
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('worker-form').classList.remove('hidden');
+                document.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden'));
             } else {
                 alert('Incorrect password. Please try again.');
             }
@@ -253,6 +252,11 @@
         function toggleLogin() {
             const loginSection = document.getElementById('login-section');
             loginSection.classList.toggle('hidden');
+        }
+
+        function downloadExcel() {
+            alert('Download Excel functionality is not yet implemented!');
+            // Implement Excel download functionality logic here
         }
 
         window.onload = loadWorkers;
