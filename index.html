@@ -7,28 +7,29 @@
     <title>Sonitpur District Nirman Mazdur Sangha</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #eef2f3;
+            background-color: #f1f1f1;
+            color: #333;
         }
         header {
-            background-color: #0077b6;
+            background-color: #004d80;
             color: #fff;
-            padding: 20px 0;
+            padding: 15px 0;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         h1 {
             margin: 0;
+            font-size: 2em;
         }
         main {
             padding: 20px;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
-        form, #worker-list {
+        form, #worker-list, #login-section {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
@@ -37,25 +38,31 @@
         }
         label {
             display: block;
-            margin: 10px 0 5px;
+            margin-top: 10px;
+            font-weight: bold;
         }
         input, select, button {
             width: 100%;
             padding: 10px;
-            margin: 5px 0 15px;
+            margin-top: 5px;
             border-radius: 5px;
             border: 1px solid #ddd;
             box-sizing: border-box;
         }
         button {
-            background-color: #0077b6;
+            background-color: #004d80;
             color: white;
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #005f8d;
+            background-color: #00375f;
+        }
+        #search {
+            margin-bottom: 20px;
+            border-radius: 5px;
+            padding: 10px;
         }
         #workers {
             list-style: none;
@@ -68,8 +75,15 @@
         #workers li:last-child {
             border-bottom: none;
         }
-        #search {
-            margin-bottom: 20px;
+        #login-section {
+            display: none;
+        }
+        #login-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -85,31 +99,55 @@
                 <input type="text" id="name" name="name" required>
                 <label for="address">Address:</label>
                 <input type="text" id="address" name="address" required>
+                <label for="pincode">Pin Code:</label>
+                <input type="text" id="pincode" name="pincode" required>
                 <label for="phone">Phone Number:</label>
                 <input type="text" id="phone" name="phone" required>
                 <label for="work">Type of Work:</label>
                 <select id="work" name="work">
-                    <option value="construction">Construction</option>
-                    <option value="plumbing">Plumbing</option>
+                    <option value="mason">Mason</option>
+                    <option value="carpenter">Carpenter</option>
+                    <option value="painter">Painter</option>
+                    <option value="plumber">Plumber</option>
                     <option value="electrician">Electrician</option>
-                    <option value="painting">Painting</option>
+                    <option value="tiler">Tiler</option>
                 </select>
                 <button type="submit">Submit</button>
             </form>
         </section>
+        
         <section id="worker-list">
             <h2>Available Workers</h2>
-            <input type="text" id="search" placeholder="Search by work type..." oninput="filterWorkers()">
+            <label for="search-work">Search by Work Type:</label>
+            <select id="search-work" oninput="filterWorkers()">
+                <option value="">All</option>
+                <option value="mason">Mason</option>
+                <option value="carpenter">Carpenter</option>
+                <option value="painter">Painter</option>
+                <option value="plumber">Plumber</option>
+                <option value="electrician">Electrician</option>
+                <option value="tiler">Tiler</option>
+            </select>
+            <label for="search-pincode">Search by Pin Code:</label>
+            <input type="text" id="search-pincode" placeholder="Enter Pin Code..." oninput="filterWorkers()">
             <ul id="workers"></ul>
+        </section>
+
+        <section id="login-section">
+            <h2>Admin Login</h2>
+            <form id="loginForm">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p id="login-message" class="hidden">If you need the admin password, please contact <a href="https://thedigitsync.blogspot.com" target="_blank">here</a>.</p>
         </section>
     </main>
 
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB-JxVp3xfNPpJf5P5tNUgE3klG8e5sPbE",
             authDomain: "nirman-mazdur-sangha.firebaseapp.com",
@@ -121,15 +159,14 @@
             measurementId: "G-YF95894JSJ"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Add a new worker to the database
         document.getElementById('registrationForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const name = document.getElementById('name').value;
             const address = document.getElementById('address').value;
+            const pincode = document.getElementById('pincode').value;
             const phone = document.getElementById('phone').value;
             const work = document.getElementById('work').value;
 
@@ -137,6 +174,7 @@
             set(workerRef, {
                 name: name,
                 address: address,
+                pincode: pincode,
                 phone: phone,
                 work: work
             });
@@ -145,7 +183,6 @@
             loadWorkers();
         });
 
-        // Load workers from the database and display them
         function loadWorkers() {
             const workerListRef = ref(database, 'workers');
             onValue(workerListRef, (snapshot) => {
@@ -155,21 +192,38 @@
                 for (const id in data) {
                     const worker = data[id];
                     const workerItem = document.createElement('li');
-                    workerItem.textContent = `${worker.name} - ${worker.address} - ${worker.phone} - ${worker.work}`;
+                    workerItem.textContent = `${worker.name} - ${worker.address}, Pin: ${worker.pincode} - ${worker.phone} - ${worker.work}`;
                     workerList.appendChild(workerItem);
                 }
             });
         }
 
-        // Filter workers based on search input
         function filterWorkers() {
-            const searchValue = document.getElementById('search').value.toLowerCase();
+            const workType = document.getElementById('search-work').value.toLowerCase();
+            const pinCode = document.getElementById('search-pincode').value;
             document.querySelectorAll('#workers li').forEach(worker => {
-                worker.style.display = worker.textContent.toLowerCase().includes(searchValue) ? '' : 'none';
+                const text = worker.textContent.toLowerCase();
+                const matchesWork = !workType || text.includes(workType);
+                const matchesPin = !pinCode || text.includes(pinCode);
+                worker.style.display = matchesWork && matchesPin ? '' : 'none';
             });
         }
 
-        // Call loadWorkers on page load
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            if (password === 'admin') {
+                alert('Logged in successfully!');
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('worker-form').style.display = 'block';
+                document.getElementById('worker-list').style.display = 'block';
+            } else {
+                alert('Incorrect password. Please try again.');
+            }
+        });
+
+        document.getElementById('login-message').classList.remove('hidden');
+
         window.onload = loadWorkers;
     </script>
 </body>
