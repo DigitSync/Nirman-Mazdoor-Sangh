@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,6 +70,9 @@
         #workers li {
             padding: 10px;
             border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         #workers li:last-child {
             border-bottom: none;
@@ -85,6 +87,10 @@
         .hidden {
             display: none;
         }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +98,26 @@
         <h1>Sonitpur District Nirman Mazdur Sangha</h1>
     </header>
     <main>
-        <section id="worker-form">
+        <button onclick="toggleLogin()">Admin Login</button>
+
+        <section id="worker-list">
+            <h2>Available Workers</h2>
+            <label for="search-work">Search by Work Type:</label>
+            <select id="search-work" oninput="filterWorkers()">
+                <option value="">All</option>
+                <option value="mason">Mason</option>
+                <option value="carpenter">Carpenter</option>
+                <option value="painter">Painter</option>
+                <option value="plumber">Plumber</option>
+                <option value="electrician">Electrician</option>
+                <option value="tiler">Tiler</option>
+            </select>
+            <label for="search-pincode">Search by Pin Code:</label>
+            <input type="text" id="search-pincode" placeholder="Enter Pin Code..." oninput="filterWorkers()">
+            <ul id="workers"></ul>
+        </section>
+
+        <section id="worker-form" class="hidden">
             <h2>Worker Registration</h2>
             <form id="registrationForm">
                 <label for="name">Name:</label>
@@ -115,38 +140,21 @@
                 <button type="submit">Submit</button>
             </form>
         </section>
-        
-        <section id="worker-list">
-            <h2>Available Workers</h2>
-            <label for="search-work">Search by Work Type:</label>
-            <select id="search-work" oninput="filterWorkers()">
-                <option value="">All</option>
-                <option value="mason">Mason</option>
-                <option value="carpenter">Carpenter</option>
-                <option value="painter">Painter</option>
-                <option value="plumber">Plumber</option>
-                <option value="electrician">Electrician</option>
-                <option value="tiler">Tiler</option>
-            </select>
-            <label for="search-pincode">Search by Pin Code:</label>
-            <input type="text" id="search-pincode" placeholder="Enter Pin Code..." oninput="filterWorkers()">
-            <ul id="workers"></ul>
-        </section>
 
-        <section id="login-section">
+        <section id="login-section" class="hidden">
             <h2>Admin Login</h2>
             <form id="loginForm">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 <button type="submit">Login</button>
             </form>
-            <p id="login-message" class="hidden">If you need the admin password, please contact <a href="https://thedigitsync.blogspot.com" target="_blank">here</a>.</p>
+            <p id="login-message">If you need the admin password, please contact <a href="https://thedigitsync.blogspot.com" target="_blank">here</a>.</p>
         </section>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB-JxVp3xfNPpJf5P5tNUgE3klG8e5sPbE",
@@ -192,7 +200,13 @@
                 for (const id in data) {
                     const worker = data[id];
                     const workerItem = document.createElement('li');
-                    workerItem.textContent = `${worker.name} - ${worker.address}, Pin: ${worker.pincode} - ${worker.phone} - ${worker.work}`;
+                    workerItem.innerHTML = `
+                        ${worker.name} - ${worker.address}, Pin: ${worker.pincode} - ${worker.phone} - ${worker.work}
+                        <div class="action-buttons">
+                            <button onclick="editWorker('${id}')">Edit</button>
+                            <button onclick="deleteWorker('${id}')">Delete</button>
+                        </div>
+                    `;
                     workerList.appendChild(workerItem);
                 }
             });
@@ -209,20 +223,37 @@
             });
         }
 
+        function editWorker(id) {
+            alert('Edit functionality is not yet implemented!');
+            // Implement edit functionality logic here
+        }
+
+        function deleteWorker(id) {
+            const workerRef = ref(database, 'workers/' + id);
+            remove(workerRef).then(() => {
+                alert('Worker deleted successfully!');
+                loadWorkers();
+            }).catch(error => {
+                console.error('Error deleting worker:', error);
+            });
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const password = document.getElementById('password').value;
             if (password === 'admin') {
                 alert('Logged in successfully!');
                 document.getElementById('login-section').style.display = 'none';
-                document.getElementById('worker-form').style.display = 'block';
-                document.getElementById('worker-list').style.display = 'block';
+                document.getElementById('worker-form').classList.remove('hidden');
             } else {
                 alert('Incorrect password. Please try again.');
             }
         });
 
-        document.getElementById('login-message').classList.remove('hidden');
+        function toggleLogin() {
+            const loginSection = document.getElementById('login-section');
+            loginSection.classList.toggle('hidden');
+        }
 
         window.onload = loadWorkers;
     </script>
