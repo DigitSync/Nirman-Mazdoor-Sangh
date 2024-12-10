@@ -73,28 +73,52 @@
         #workers li:last-child {
             border-bottom: none;
         }
-        .hidden {
-            display: none;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        #description {
+        #welcome-message {
+            background-color: #ffc107;
+            color: #000;
+            padding: 10px;
+            margin: 20px 0;
             text-align: center;
-            margin-bottom: 20px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .admin-button {
+            width: 20px;
+            height: 20px;
+            background-color: transparent;
+            border: none;
+            font-size: 0.8em;
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: #004d80;
+        }
+        .call-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .call-button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Sonitpur District Nirman Mazdoor Sangh</h1>
+        <button class="admin-button" onclick="toggleLogin()">🔑</button>
     </header>
+    <div id="welcome-message">
+        <marquee>Welcome to the official portal of Sonitpur District Nirman Mazdoor Sangh. Connecting skilled workers with opportunities.</marquee>
+    </div>
     <main>
-        <section id="description">
-            <p>Welcome to the Sonitpur District Nirman Mazdoor Sangh official portal. This platform helps connect skilled workers with contractors and businesses in need of services. Here, workers can register their details, and employers can search for workers by type and location.</p>
-        </section>
-        
         <section id="worker-search">
             <h2>Search Workers</h2>
             <label for="search-work">Select Work Type:</label>
@@ -109,11 +133,11 @@
             </select>
             <label for="search-pincode">Enter Pin Code:</label>
             <input type="text" id="search-pincode" placeholder="Enter Pin Code..." oninput="filterWorkers()">
+            <button id="search-button" onclick="filterWorkers()">Search</button>
             <ul id="workers"></ul>
-            <button onclick="downloadExcel()">Download Excel</button>
         </section>
 
-        <section id="worker-form" class="hidden">
+        <section id="worker-form">
             <h2>Worker Registration</h2>
             <form id="registrationForm">
                 <label for="name">Name:</label>
@@ -137,8 +161,6 @@
             </form>
         </section>
 
-        <button onclick="toggleLogin()">Admin Login</button>
-        
         <section id="login-section" class="hidden">
             <h2>Admin Login</h2>
             <form id="loginForm">
@@ -147,6 +169,13 @@
                 <button type="submit">Login</button>
             </form>
             <p id="login-message">If you need the admin password, please contact <a href="https://thedigitsync.blogspot.com" target="_blank">here</a>.</p>
+        </section>
+
+        <section id="admin-panel" class="hidden">
+            <h2>Admin Panel</h2>
+            <p>Manage registered workers here.</p>
+            <ul id="admin-workers"></ul>
+            <button onclick="downloadExcel()">Download Excel</button>
         </section>
     </main>
 
@@ -194,18 +223,29 @@
             onValue(workerListRef, (snapshot) => {
                 const data = snapshot.val();
                 const workerList = document.getElementById('workers');
+                const adminWorkerList = document.getElementById('admin-workers');
                 workerList.innerHTML = '';
+                adminWorkerList.innerHTML = '';
+
                 for (const id in data) {
                     const worker = data[id];
                     const workerItem = document.createElement('li');
+                    const adminWorkerItem = document.createElement('li');
+
                     workerItem.innerHTML = `
+                        ${worker.name} - ${worker.address}, Pin: ${worker.pincode}
+                        <button class="call-button" onclick="callWorker('${worker.phone}')">Call</button>
+                    `;
+                    adminWorkerItem.innerHTML = `
                         ${worker.name} - ${worker.address}, Pin: ${worker.pincode} - ${worker.phone} - ${worker.work}
-                        <div class="action-buttons hidden" id="admin-${id}">
+                        <div class="action-buttons">
                             <button onclick="editWorker('${id}')">Edit</button>
                             <button onclick="deleteWorker('${id}')">Delete</button>
                         </div>
                     `;
+
                     workerList.appendChild(workerItem);
+                    adminWorkerList.appendChild(adminWorkerItem);
                 }
             });
         }
@@ -219,6 +259,10 @@
                 const matchesPin = !pinCode || text.includes(pinCode);
                 worker.style.display = matchesWork && matchesPin ? '' : 'none';
             });
+        }
+
+        function callWorker(phone) {
+            window.open(`tel:${phone}`);
         }
 
         function editWorker(id) {
@@ -242,8 +286,7 @@
             if (password === 'admin') {
                 alert('Logged in successfully!');
                 document.getElementById('login-section').style.display = 'none';
-                document.getElementById('worker-form').classList.remove('hidden');
-                document.querySelectorAll('.action-buttons').forEach(button => button.classList.remove('hidden'));
+                document.getElementById('admin-panel').classList.remove('hidden');
             } else {
                 alert('Incorrect password. Please try again.');
             }
