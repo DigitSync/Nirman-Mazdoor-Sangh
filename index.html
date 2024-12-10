@@ -1,167 +1,162 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sonitpur District Nirman Mazdoor Sangh</title>
+    <title>Search Workers</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
             background-color: #f1f1f1;
-            color: #333;
-        }
-        header {
-            background-color: #004d80;
-            color: #fff;
-            padding: 15px 0;
-            text-align: center;
+            padding: 20px;
         }
         h1 {
-            margin: 0;
-            font-size: 2em;
+            text-align: center;
+            color: #004d80;
         }
-        main {
-            padding: 20px;
-            max-width: 900px;
+        #search-container {
+            max-width: 500px;
             margin: 0 auto;
-        }
-        section {
-            background-color: #fff;
-            border-radius: 8px;
+            background: white;
             padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        input, select, button {
-            width: 100%;
+        select, input[type="text"], button {
+            width: calc(100% - 20px);
             padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
+            margin: 10px 0;
             border: 1px solid #ddd;
-            box-sizing: border-box;
+            border-radius: 5px;
+            font-size: 1em;
         }
         button {
             background-color: #004d80;
             color: white;
-            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 10px;
         }
         button:hover {
             background-color: #00375f;
         }
-        #workers {
-            list-style: none;
-            padding: 0;
+        .work-header {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
+            background-color: white;
         }
-        #workers li {
+        th, td {
             padding: 10px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: left;
+            border: 1px solid #ddd;
         }
-        #workers li:last-child {
-            border-bottom: none;
+        th {
+            background-color: #004d80;
+            color: white;
         }
         .call-button {
             background-color: #28a745;
             color: white;
+            padding: 5px 10px;
             border: none;
-            padding: 5px;
-            cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
-            font-size: 0.9em;
+            cursor: pointer;
         }
         .call-button:hover {
             background-color: #218838;
         }
-        .worker-details {
-            flex-direction: column;
-            align-items: start;
-            gap: 5px;
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
         }
-        .highlight {
+        .action-buttons button {
+            width: 200px;
+            margin: 10px;
+            font-size: 1em;
+        }
+        .register-button {
+            background-color: #ff5722;
+            color: white;
             font-weight: bold;
+        }
+        .register-button:hover {
+            background-color: #e64a19;
+        }
+        .login-button {
+            background-color: #2196f3;
+            color: white;
+        }
+        .login-button:hover {
+            background-color: #1976d2;
+        }
+        @media screen and (max-width: 768px) {
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 8px;
+            }
+            button {
+                font-size: 14px;
+                padding: 5px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Sonitpur District Nirman Mazdoor Sangh</h1>
-    </header>
-    <main>
-        <section id="worker-registration">
-            <h2>Worker Registration</h2>
-            <form id="registrationForm">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address" required>
-                <label for="pincode">Pin Code:</label>
-                <input type="text" id="pincode" name="pincode" required>
-                <label for="phone">Phone Number:</label>
-                <input type="text" id="phone" name="phone" required>
-                <label for="work">Type of Work:</label>
-                <select id="work" name="work">
-                    <option value="mason">Mason</option>
-                    <option value="carpenter">Carpenter</option>
-                    <option value="painter">Painter</option>
-                    <option value="plumber">Plumber</option>
-                    <option value="electrician">Electrician</option>
-                    <option value="tiler">Tiler</option>
-                    <option value="welder">Welder</option>
-                    <option value="plasterer">Plasterer</option>
-                    <option value="gardener">Gardener</option>
-                    <option value="cook">Cook</option>
-                </select>
-                <button type="submit">Register Worker</button>
-            </form>
-        </section>
+    <h1>Search Workers</h1>
+    <div id="search-container">
+        <select id="search-work">
+            <option value="">Select Work Type</option>
+            <option value="Mason">Mason</option>
+            <option value="Carpenter">Carpenter</option>
+            <option value="Electrician">Electrician</option>
+            <option value="Painter">Painter</option>
+            <option value="Plumber">Plumber</option>
+            <option value="Labour">Labour</option>
+            <option value="Welder">Welder</option>
+            <option value="Contractor">Contractor</option>
+            <option value="Gardener">Gardener</option>
+            <option value="Driver">Driver</option>
+        </select>
+        <input type="text" id="search-pincode" placeholder="Enter Pin Code (Optional)" />
+        <button onclick="searchWorkers()">Search</button>
+    </div>
+    <div class="work-header" id="work-header"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Pin Code</th>
+                <th>Call</th>
+            </tr>
+        </thead>
+        <tbody id="search-results">
+            <!-- Search results will appear here -->
+        </tbody>
+    </table>
 
-        <section id="worker-search">
-            <h2>Search Workers</h2>
-            <input type="text" id="search-name" placeholder="Search by name...">
-            <select id="search-work">
-                <option value="">All</option>
-                <option value="mason">Mason</option>
-                <option value="carpenter">Carpenter</option>
-                <option value="painter">Painter</option>
-                <option value="plumber">Plumber</option>
-                <option value="electrician">Electrician</option>
-                <option value="tiler">Tiler</option>
-                <option value="welder">Welder</option>
-                <option value="plasterer">Plasterer</option>
-                <option value="gardener">Gardener</option>
-                <option value="cook">Cook</option>
-            </select>
-            <input type="text" id="search-pincode" placeholder="Search by pin code...">
-            <button onclick="filterWorkers()">Search</button>
-            <ul id="workers"></ul>
-        </section>
-    </main>
+    <div class="action-buttons">
+        <button class="register-button" onclick="location.href='https://thedigitsync.blogspot.com/p/new-worker-registration.html'">Worker Registration</button>
+        <button class="login-button" onclick="location.href='https://thedigitsync.blogspot.com/p/worker-login.html'">Worker Login</button>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB-JxVp3xfNPpJf5P5tNUgE3klG8e5sPbE",
             authDomain: "nirman-mazdur-sangha.firebaseapp.com",
             databaseURL: "https://nirman-mazdur-sangha-default-rtdb.firebaseio.com",
             projectId: "nirman-mazdur-sangha",
-            storageBucket: "nirman-mazdur-sangha.firebasestorage.app",
+            storageBucket: "nirman-mazdur-sangha.appspot.com",
             messagingSenderId: "620359948544",
             appId: "1:620359948544:web:45e5d58b9bc35d3d797be5",
             measurementId: "G-YF95894JSJ"
@@ -169,79 +164,54 @@
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-        let workers = [];
 
-        document.getElementById('registrationForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            const address = document.getElementById('address').value;
-            const pincode = document.getElementById('pincode').value;
-            const phone = document.getElementById('phone').value;
-            const work = document.getElementById('work').value;
+        const searchResults = document.getElementById('search-results');
+        const workHeader = document.getElementById('work-header');
 
-            const workerRef = ref(database, 'workers/' + Date.now());
-            set(workerRef, {
-                name: name,
-                address: address,
-                pincode: pincode,
-                phone: phone,
-                work: work
-            });
-
-            this.reset();
-            alert('Worker registered successfully!');
-            loadWorkers(); // Refresh the worker list after registration
-        });
-
-        function loadWorkers() {
-            const workerListRef = ref(database, 'workers');
-            onValue(workerListRef, (snapshot) => {
-                const data = snapshot.val();
-                workers = [];
-                for (const id in data) {
-                    workers.push(data[id]);
-                }
-                displayWorkers(workers);
-            });
-        }
-
-        function filterWorkers() {
-            const name = document.getElementById('search-name').value.toLowerCase();
-            const workType = document.getElementById('search-work').value.toLowerCase();
+        // Search workers
+        window.searchWorkers = function () {
+            const workType = document.getElementById('search-work').value.trim();
             const pinCode = document.getElementById('search-pincode').value.trim();
 
-            const filteredWorkers = workers.filter(worker => {
-                const matchesName = !name || worker.name.toLowerCase().includes(name);
-                const matchesWork = !workType || worker.work.toLowerCase() === workType;
-                const matchesPin = !pinCode || worker.pincode.includes(pinCode);
-                return matchesName && matchesWork && matchesPin;
+            if (!workType) {
+                alert("Please select a work type to search.");
+                return;
+            }
+
+            workHeader.textContent = `Showing results for: ${workType}`;
+            const workersRef = ref(database, 'workers');
+            onValue(workersRef, (snapshot) => {
+                const data = snapshot.val();
+                searchResults.innerHTML = '';
+
+                for (const id in data) {
+                    const worker = data[id];
+                    const matchesWork = worker.work.toLowerCase() === workType.toLowerCase() || !workType;
+                    const matchesPin = pinCode ? worker.pincode === pinCode : true;
+
+                    if (matchesWork && matchesPin) {
+                        const row = `
+                            <tr>
+                                <td>${worker.name}</td>
+                                <td>${worker.address}</td>
+                                <td>${worker.pincode}</td>
+                                <td><button class="call-button" onclick="makeCall('${worker.phone}')">Call</button></td>
+                            </tr>
+                        `;
+                        searchResults.innerHTML += row;
+                    }
+                }
+
+                if (searchResults.innerHTML === '') {
+                    searchResults.innerHTML = '<tr><td colspan="4">No workers found matching the criteria.</td></tr>';
+                }
             });
+        };
 
-            displayWorkers(filteredWorkers);
-        }
-
-        function displayWorkers(workerList) {
-            const workerListElement = document.getElementById('workers');
-            workerListElement.innerHTML = '';
-
-            workerList.forEach(worker => {
-                const workerItem = document.createElement('li');
-                workerItem.className = 'worker-details';
-                workerItem.innerHTML = `
-                    <div class="highlight">${worker.name}</div>
-                    <div>${worker.address}, Pin: ${worker.pincode}</div>
-                    <div>Phone: ${worker.phone}</div>
-                    <button class="call-button" onclick="callWorker('${worker.phone}')">Call</button>
-                `;
-                workerListElement.appendChild(workerItem);
-            });
-        }
-
-        function callWorker(phone) {
-            window.open(`tel:${phone}`);
-        }
-
-        loadWorkers();
+        // Make a call
+        window.makeCall = function (phone) {
+            window.open(`tel:${phone}`, '_self');
+        };
     </script>
 </body>
 </html>
