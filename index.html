@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonitpur District Nirman Mazdur Sangha</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f9; }
+        header { background-color: #0077b6; color: white; padding: 10px 0; text-align: center; }
+        main { padding: 20px; }
+        h1, h2 { color: #023e8a; }
+        form, #worker-list { max-width: 400px; margin: 20px auto; padding: 10px; background-color: #fff; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        label { display: block; margin-top: 10px; }
+        input, select, button { width: 100%; padding: 8px; margin-top: 5px; }
+        button { background-color: #0077b6; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #023e8a; }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 10px; border-bottom: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sonitpur District Nirman Mazdur Sangha</h1>
+    </header>
+    <main>
+        <section id="worker-form">
+            <h2>Worker Registration</h2>
+            <form id="registrationForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" required>
+                <label for="work">Type of Work:</label>
+                <select id="work" name="work">
+                    <option value="construction">Construction</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="painting">Painting</option>
+                </select>
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+        <section id="worker-list">
+            <h2>Available Workers</h2>
+            <input type="text" id="search" placeholder="Search by work type..." oninput="filterWorkers()">
+            <ul id="workers"></ul>
+        </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+
+        document.getElementById('registrationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const work = document.getElementById('work').value;
+
+            database.ref('workers').push().set({ name, address, phone, work });
+            this.reset();
+            loadWorkers();
+        });
+
+        function loadWorkers() {
+            const workerList = document.getElementById('workers');
+            workerList.innerHTML = '';
+            database.ref('workers').on('value', snapshot => {
+                snapshot.forEach(childSnapshot => {
+                    const worker = childSnapshot.val();
+                    const workerItem = document.createElement('li');
+                    workerItem.textContent = `${worker.name} - ${worker.address} - ${worker.phone} - ${worker.work}`;
+                    workerList.appendChild(workerItem);
+                });
+            });
+        }
+
+        function filterWorkers() {
+            const searchValue = document.getElementById('search').value.toLowerCase();
+            document.querySelectorAll('#workers li').forEach(worker => {
+                worker.style.display = worker.textContent.toLowerCase().includes(searchValue) ? '' : 'none';
+            });
+        }
+
+        window.onload = loadWorkers;
+    </script>
+</body>
+</html>
