@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Workers</title>
+    <title>NIRMAN MAZDOOR SANGHA</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
+            background-image: url('https://via.placeholder.com/1920x1080');
+            background-size: cover;
+            background-repeat: no-repeat;
             padding: 20px;
         }
-        h1 {
+        header {
+            background-color: #004d80;
+            color: white;
+            padding: 20px;
             text-align: center;
-            color: #004d80;
+        }
+        header h1 {
+            margin: 0;
         }
         #search-container {
             max-width: 500px;
@@ -94,6 +101,13 @@
         .login-button:hover {
             background-color: #1976d2;
         }
+        .labor-card-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .labor-card-button:hover {
+            background-color: #45a049;
+        }
         @media screen and (max-width: 768px) {
             table {
                 font-size: 14px;
@@ -109,7 +123,10 @@
     </style>
 </head>
 <body>
-    <h1>Search Workers</h1>
+    <header>
+        <h1>NIRMAN MAZDOOR SANGHA</h1>
+        <p>Official Website</p>
+    </header>
     <div id="search-container">
         <select id="search-work">
             <option value="">Select Work Type</option>
@@ -122,9 +139,9 @@
             <option value="Contractor">Contractor</option>
             <option value="Gardener">Gardener</option>
             <option value="Driver">Driver</option>
-<option value="Tiler">Tiler</option> <!-- Added -->
-    <option value="Plasterer">Plasterer</option> <!-- Added -->
-    <option value="Cook">Cook</option> <!-- Added -->
+            <option value="Tiler">Tiler</option>
+            <option value="Plasterer">Plasterer</option>
+            <option value="Cook">Cook</option>
         </select>
         <input type="text" id="search-pincode" placeholder="Enter Pin Code (Optional)" />
         <button onclick="searchWorkers()">Search</button>
@@ -145,8 +162,9 @@
     </table>
 
     <div class="action-buttons">
-        <button class="register-button" onclick="location.href='https://thedigitsync.blogspot.com/p/new-worker-registration.html'">Worker Registration <br> শ্ৰমিক পঞ্জীয়ন</button>
+        <button class="register-button" onclick="location.href='https://thedigitsync.blogspot.com/p/new-worker-registration.html'">Worker Registration<br>শ্ৰমিক পঞ্জীয়ন</button>
         <button class="login-button" onclick="location.href='https://thedigitsync.blogspot.com/p/worker-login.html'">Worker Login</button>
+        <button class="labor-card-button" onclick="window.open('https://api.whatsapp.com/send?phone=7399490650&text=প্ৰেশ্ন: মোৰ লেবার কাৰ্ড বনাবলৈ অনুগ্ৰহ কৰি মোক কল কৰক।')">Labour Card<br>শ্ৰমিক কাৰ্ড</button>
     </div>
 
     <script type="module">
