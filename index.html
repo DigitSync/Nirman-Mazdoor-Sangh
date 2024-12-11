@@ -228,10 +228,9 @@
         <button class="labor-card-button" onclick="window.open('https://api.whatsapp.com/send?phone=7399490650&text=প্ৰেশ্ন: মোৰ লেবার কাৰ্ড বনাবলৈ অনুগ্ৰহ কৰি মোক কল কৰক।')">Labour Card<br>শ্ৰমিক কাৰ্ড</button>
     </div>
 
-    <div class="share-button">
+        <div class="share-button">
         <i class="fas fa-share-alt"></i>
     </div>
-    <a href="https://digitsync.github.io/Nirman-Mazdoor-Sangh/" class="share-link">Share</a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
@@ -301,10 +300,10 @@
 
         // Share button and link
         const shareButton = document.querySelector('.share-button');
-        const shareLink = document.querySelector('.share-link');
 
         shareButton.addEventListener('click', () => {
-            shareLink.classList.toggle('show');
+            const shareText = 'Find trusted workers—masons, carpenters, electricians, and more.(বিশ্বাসযোগ্য কাম কৰোঁতাৰ সন্ধান কৰক। ৰাজমিস্ত্রী, কাঠমিস্ত্রী, ইলেকটি্রছিয়ান, পেইণ্টাৰ আৰু আনবোৰৰ বাবে আমাৰ ৱেবচাইটত চাওক।) Visit: https://digitsync.github.io/Nirman-Mazdoor-Sangh/';
+            navigator.share({ text: shareText });
         });
     </script>
 </body>
