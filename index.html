@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NIRMAN MAZDOOR SANGHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,6 +21,7 @@
         }
         header h1 {
             margin: 0;
+            font-size: 32px;
         }
         #search-container {
             max-width: 500px;
@@ -108,6 +110,59 @@
         .labor-card-button:hover {
             background-color: #45a049;
         }
+        .share-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #ff5722;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .share-button i {
+            color: white;
+            font-size: 20px;
+        }
+        .share-link {
+            position: fixed;
+            top: 20px;
+            right: 70px;
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .share-link.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .marquee {
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+            background-color: #ff5722;
+            color: white;
+            line-height: 40px;
+            white-space: nowrap;
+        }
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 10s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
         @media screen and (max-width: 768px) {
             table {
                 font-size: 14px;
@@ -119,14 +174,20 @@
                 font-size: 14px;
                 padding: 5px;
             }
+            header h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>NIRMAN MAZDOOR SANGHA</h1>
-        <p>Official Website</p>
+        <p>Workers Search</p>
     </header>
+    <div class="marquee">
+        <span>NIRMAN MAZDOOR SANGHA Official Website is a platform connecting workers and employers. Workers can register and showcase their skills, while employers can easily find workers based on pin codes and job types (e.g., plumber, electrician, carpenter). If anyone wants to apply for a labour card, they can contact us directly through the website.</span>
+    </div>
     <div id="search-container">
         <select id="search-work">
             <option value="">Select Work Type</option>
@@ -166,6 +227,11 @@
         <button class="login-button" onclick="location.href='https://thedigitsync.blogspot.com/p/worker-login.html'">Worker Login</button>
         <button class="labor-card-button" onclick="window.open('https://api.whatsapp.com/send?phone=7399490650&text=প্ৰেশ্ন: মোৰ লেবার কাৰ্ড বনাবলৈ অনুগ্ৰহ কৰি মোক কল কৰক।')">Labour Card<br>শ্ৰমিক কাৰ্ড</button>
     </div>
+
+    <div class="share-button">
+        <i class="fas fa-share-alt"></i>
+    </div>
+    <a href="https://digitsync.github.io/Nirman-Mazdoor-Sangh/" class="share-link">Share</a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
@@ -232,6 +298,14 @@
         window.makeCall = function (phone) {
             window.open(`tel:${phone}`, '_self');
         };
+
+        // Share button and link
+        const shareButton = document.querySelector('.share-button');
+        const shareLink = document.querySelector('.share-link');
+
+        shareButton.addEventListener('click', () => {
+            shareLink.classList.toggle('show');
+        });
     </script>
 </body>
 </html>
