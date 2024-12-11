@@ -178,6 +178,11 @@
                 font-size: 24px;
             }
         }
+        #search-pincode {
+            width: 150px;
+            padding: 5px;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
@@ -204,7 +209,8 @@
             <option value="Plasterer">Plasterer</option>
             <option value="Cook">Cook</option>
         </select>
-        <input type="text" id="search-pincode" placeholder="Enter Pin Code (Optional)" />
+        <label for="search-pincode">Pin Code (Optional):</label>
+        <input type="text" id="search-pincode" placeholder="Enter Pin Code" />
         <button onclick="searchWorkers()">Search</button>
     </div>
     <div class="work-header" id="work-header"></div>
