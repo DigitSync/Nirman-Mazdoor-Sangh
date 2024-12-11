@@ -11,12 +11,12 @@
             background-image: url('https://i.ibb.co/H2M5rWg/7d6ad625daf213313845c8068041908f.jpg');
             background-size: cover;
             background-repeat: no-repeat;
-            padding: 20px;
+            padding: 0px;
         }
         header {
             background-color: #004d80;
             color: white;
-            padding: 20px;
+            padding: 10px;
             text-align: center;
         }
         header h1 {
@@ -24,7 +24,7 @@
             font-size: 32px;
         }
         #search-container {
-            max-width: 500px;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             padding: 20px;
@@ -35,12 +35,12 @@
             width: calc(100% - 20px);
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #0;
+            border-radius: 9px;
             font-size: 1em;
         }
         button {
-            background-color: #004d80;
+            background-color: darkblue;
             color: white;
             cursor: pointer;
         }
@@ -56,13 +56,13 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
             background-color: white;
         }
         th, td {
             padding: 10px;
             text-align: left;
-            border: 1px solid #ddd;
+            border: 01px solid #ddd;
         }
         th {
             background-color: #004d80;
@@ -71,9 +71,9 @@
         .call-button {
             background-color: #28a745;
             color: white;
-            padding: 5px 10px;
+            padding: 1px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 01px;
             cursor: pointer;
         }
         .call-button:hover {
@@ -85,7 +85,7 @@
         }
         .action-buttons button {
             width: 200px;
-            margin: 10px;
+            margin: 5px;
             font-size: 1em;
         }
         .register-button {
@@ -157,13 +157,13 @@
         .marquee span {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 10s linear infinite;
+            animation: marquee 30s linear infinite;
         }
         @keyframes marquee {
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 300px) {
             table {
                 font-size: 14px;
             }
@@ -183,7 +183,7 @@
 <body>
     <header>
         <h1>NIRMAN MAZDOOR SANGHA</h1>
-        <p>Workers Search</p>
+        <h2>Workers Search</h2>
     </header>
     <div class="marquee">
         <span>NIRMAN MAZDOOR SANGHA Official Website is a platform connecting workers and employers. Workers can register and showcase their skills, while employers can easily find workers based on pin codes and job types (e.g., plumber, electrician, carpenter). If anyone wants to apply for a labour card, they can contact us directly through the website.</span>
@@ -281,7 +281,7 @@
                                 <td>${worker.name}</td>
                                 <td>${worker.address}</td>
                                 <td>${worker.pincode}</td>
-                                <td><button class="call-button" onclick="makeCall('${worker.phone}')">Call</button></td>
+                                <td><button class="call-button" onclick="makeCall('${worker.phone}')">📞Call</button></td>
                             </tr>
                         `;
                         searchResults.innerHTML += row;
